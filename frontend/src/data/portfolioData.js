@@ -40,6 +40,16 @@ export const portfolioData = {
       githubUrl: "https://github.com/yourusername/taskmanager",
       liveUrl: "https://your-taskmanager-demo.com",
       featured: true
+    },
+    {
+      id: 3,
+      title: "Weather Dashboard",
+      description: "A responsive weather dashboard that displays current weather and forecasts for multiple cities with interactive charts and maps.",
+      technologies: ["React", "Chart.js", "OpenWeather API", "CSS3"],
+      image: "/images/project3.jpg",
+      githubUrl: "https://github.com/yourusername/weather-dashboard",
+      liveUrl: "https://your-weather-demo.com",
+      featured: false
     }
   ],
   experience: [
@@ -56,8 +66,24 @@ export const portfolioData = {
       company: "AWS",
       position: "Technical Account Manager",
       duration: "June 2024 - May 2025",
-      description: "Built TAMBR, a Gen-AI based internal tool that analyses customer data to provide valuable financial, operations and security insights about their AWS workloads. This tool is now used orgwide, boosting TAM productivity by over 30%.",
+      description: "Built TAMBR, a Gen-AI based internal tool that analyses customer data to provide valuable financial, operations and security insights about their AWS workloads. This tool is now used orgwide, boosting TAM productivity by over 30%. Oversaw workloads for enterprise customers (some with $35M+ ARR) on AWS, advising on solution architecture, implementation, operations, and cost optimization.",
       technologies: ["AWS", "Python", "TypeScript"]
+    },
+    {
+      id: 3,
+      company: "AWS",
+      position: "Technical Account Manager Intern",
+      duration: "June - August 2023",
+      description: "Earned AWS Cloud Practitioners and Solutions Architect Associate Certification. Built a DevOps solution using CI/CD pipeline, blue-green deployment strategy, and a monitoring dashboard for an online translation service. Helped them sync their dev and prod instances, reduce costs, and increase their application availability.",
+      technologies: ["AWS CDK", "TypeScript", "NodeJS", "CodeDeploy", "ECS", "Route53", "Athena", "Kinesis", "S3", "Lambda", "QuickSight", "CloudWatch"]
+    },
+    {
+      id: 4,
+      company: "Nokia",
+      position: "Software Engineer Intern",
+      duration: "Sept - December 2022",
+      description: "Developed and tested Bash scripts for Nokia's CN support tools, enabling faster troubleshooting of complex network issues. Gained hands-on experience with VMs, Linux, and Kubernetes while supporting network operations.",
+      technologies: ["C", "C++", "Kubernetes", "Unix shell scripting"]
     }
   ],
   education: [
@@ -66,7 +92,7 @@ export const portfolioData = {
       institution: "University of Toronto",
       degree: "Computer Science Software Engineering Specialist with Minor in Statistics",
       duration: "Sept 2020 - April 2024",
-      description: "Dean's List UTSC (2020-2024), International Scholar Award (Merit Based - valued at $225,000)"
+      description: "Dean's List UTSC (2020-2024), International Scholar Award (Merit Based - valued at $225,000), Nokia Next Gen Tech Scholarship for Best Intern Project (valued at $15,000)"
     }
   ]
 };
