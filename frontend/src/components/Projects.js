@@ -7,7 +7,8 @@ import { portfolioData } from '../data/portfolioData';
 
 const ProjectsSection = styled.section`
   padding: 100px 0;
-  background: #0f0f0f;
+  background: rgba(15, 15, 15, 0.3);
+  backdrop-filter: blur(5px);
   position: relative;
 `;
 

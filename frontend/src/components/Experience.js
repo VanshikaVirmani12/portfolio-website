@@ -7,7 +7,8 @@ import { portfolioData } from '../data/portfolioData';
 
 const ExperienceSection = styled.section`
   padding: 100px 0;
-  background: #0a0a0a;
+  background: rgba(10, 10, 10, 0.3);
+  backdrop-filter: blur(5px);
   position: relative;
 `;
 

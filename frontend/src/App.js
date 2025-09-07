@@ -10,11 +10,13 @@ import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import SpaceBackground from './components/SpaceBackground';
 
 function App() {
   return (
     <Router>
       <div className="App">
+        <SpaceBackground />
         <ScrollToTop />
         <Header />
         <Routes>
