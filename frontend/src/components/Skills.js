@@ -144,7 +144,7 @@ const TechCard = styled(motion.div)`
   }
   
   .tech-icon {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     margin-bottom: 1rem;
     color: #3b82f6;
   }
@@ -188,8 +188,6 @@ const Skills = () => {
     { name: 'Python', description: 'Programming Language', icon: '🐍' },
     { name: 'Java', description: 'Enterprise Language', icon: '☕' },
     { name: 'C', description: 'System Programming', icon: '⚙️' },
-    { name: 'MongoDB', description: 'NoSQL Database', icon: '🍃' },
-    { name: 'PostgreSQL', description: 'SQL Database', icon: '🐘' },
     { name: 'AWS', description: 'Cloud Platform', icon: '☁️' },
     { name: 'Kubernetes', description: 'Container Orchestration', icon: '🚢' },
     { name: 'Docker', description: 'Containerization', icon: '🐳' },
