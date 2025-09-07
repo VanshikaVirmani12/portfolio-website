@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import { FaBriefcase, FaGraduationCap, FaCalendarAlt } from 'react-icons/fa';
-import axios from 'axios';
+import { portfolioData } from '../data/portfolioData';
 
 const ExperienceSection = styled.section`
   padding: 100px 0;
@@ -201,48 +201,8 @@ const Experience = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [expResponse, eduResponse] = await Promise.all([
-          axios.get('/api/portfolio/experience'),
-          axios.get('/api/portfolio/education')
-        ]);
-        setExperience(expResponse.data);
-        setEducation(eduResponse.data);
-      } catch (error) {
-        console.error('Error fetching experience data:', error);
-        // Fallback data
-        setExperience([
-          {
-            id: 1,
-            company: "Tech Company Inc.",
-            position: "Senior Full Stack Developer",
-            duration: "2022 - Present",
-            description: "Led development of multiple web applications using React and Node.js. Improved application performance by 40% and mentored junior developers.",
-            technologies: ["React", "Node.js", "AWS", "Docker"]
-          },
-          {
-            id: 2,
-            company: "StartupXYZ",
-            position: "Frontend Developer",
-            duration: "2020 - 2022",
-            description: "Developed responsive user interfaces and collaborated with design team to implement pixel-perfect designs. Reduced page load times by 30%.",
-            technologies: ["React", "TypeScript", "Sass", "Webpack"]
-          }
-        ]);
-        setEducation([
-          {
-            id: 1,
-            institution: "University of Technology",
-            degree: "Bachelor of Science in Computer Science",
-            duration: "2016 - 2020",
-            description: "Graduated with honors. Relevant coursework included Data Structures, Algorithms, Database Systems, and Software Engineering."
-          }
-        ]);
-      }
-    };
-
-    fetchData();
+    setExperience(portfolioData.experience);
+    setEducation(portfolioData.education);
   }, []);
 
   const tabs = [

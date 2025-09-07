@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import { FaCode, FaServer, FaDatabase, FaCloud, FaMobile, FaPalette } from 'react-icons/fa';
-import axios from 'axios';
+import { portfolioData } from '../data/portfolioData';
 
 const SkillsSection = styled.section`
   padding: 100px 0;
@@ -168,27 +168,7 @@ const Skills = () => {
   });
 
   useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const response = await axios.get('/api/portfolio/skills');
-        setSkills(response.data);
-      } catch (error) {
-        console.error('Error fetching skills:', error);
-        // Fallback data
-        setSkills([
-          { name: "JavaScript", level: 90, category: "Programming" },
-          { name: "React", level: 85, category: "Frontend" },
-          { name: "Node.js", level: 80, category: "Backend" },
-          { name: "Python", level: 75, category: "Programming" },
-          { name: "TypeScript", level: 80, category: "Programming" },
-          { name: "MongoDB", level: 70, category: "Database" },
-          { name: "PostgreSQL", level: 75, category: "Database" },
-          { name: "AWS", level: 65, category: "Cloud" }
-        ]);
-      }
-    };
-
-    fetchSkills();
+    setSkills(portfolioData.skills);
   }, []);
 
   const categories = [

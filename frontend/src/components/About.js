@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import { FaCode, FaGlobe, FaMapMarkerAlt, FaPlane, FaUser, FaHeart } from 'react-icons/fa';
-import axios from 'axios';
+import { portfolioData } from '../data/portfolioData';
 
 const AboutSection = styled.section`
   padding: 100px 0;
@@ -223,16 +223,7 @@ const About = () => {
   ];
 
   useEffect(() => {
-    const fetchPersonalInfo = async () => {
-      try {
-        const response = await axios.get('/api/portfolio/personal');
-        setPersonalInfo(response.data);
-      } catch (error) {
-        console.error('Error fetching personal info:', error);
-      }
-    };
-
-    fetchPersonalInfo();
+    setPersonalInfo(portfolioData.personalInfo);
   }, []);
 
   const stats = [

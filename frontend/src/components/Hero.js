@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { FaGithub, FaLinkedin, FaDownload } from 'react-icons/fa';
 import { ReactTyped } from 'react-typed';
-import axios from 'axios';
+import { portfolioData } from '../data/portfolioData';
 
 const HeroSection = styled.section`
   min-height: 100vh;
@@ -386,16 +386,7 @@ const Hero = () => {
   });
 
   useEffect(() => {
-    const fetchPersonalInfo = async () => {
-      try {
-        const response = await axios.get('/api/portfolio/personal');
-        setPersonalInfo(response.data);
-      } catch (error) {
-        console.error('Error fetching personal info:', error);
-      }
-    };
-
-    fetchPersonalInfo();
+    setPersonalInfo(portfolioData.personalInfo);
   }, []);
 
   const typedStrings = [

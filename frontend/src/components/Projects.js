@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import { FaGithub, FaExternalLinkAlt, FaCode } from 'react-icons/fa';
-import axios from 'axios';
+import { portfolioData } from '../data/portfolioData';
 
 const ProjectsSection = styled.section`
   padding: 100px 0;
@@ -238,55 +238,8 @@ const Projects = () => {
   const filters = ['All', 'Featured', 'Frontend', 'Backend', 'Full Stack'];
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get('/api/portfolio/projects');
-        setProjects(response.data);
-        setFilteredProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-        // Fallback data
-        const fallbackProjects = [
-          {
-            id: 1,
-            title: "Verbo-Verse",
-            description: "A full-stack e-commerce solution built with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.",
-            technologies: ["React", "Node.js", "MongoDB", "Stripe API"],
-            image: "/images/project1.jpg",
-            githubUrl: "https://github.com/yourusername/ecommerce",
-            liveUrl: "https://your-ecommerce-demo.com",
-            featured: true,
-            category: "Full Stack"
-          },
-          {
-            id: 2,
-            title: "Project 360",
-            description: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.",
-            technologies: ["React", "Socket.io", "Express", "PostgreSQL"],
-            image: "/images/project2.jpg",
-            githubUrl: "https://github.com/yourusername/taskmanager",
-            liveUrl: "https://your-taskmanager-demo.com",
-            featured: true,
-            category: "Full Stack"
-          },
-          {
-            id: 3,
-            title: "Weather Dashboard",
-            description: "A responsive weather dashboard that displays current weather and forecasts for multiple cities with interactive charts and maps.",
-            technologies: ["React", "Chart.js", "OpenWeather API", "CSS3"],
-            image: "/images/project3.jpg",
-            githubUrl: "https://github.com/yourusername/weather-dashboard",
-            liveUrl: "https://your-weather-demo.com",
-            featured: false,
-            category: "Frontend"
-          }
-        ];
-        setProjects(fallbackProjects);
-        setFilteredProjects(fallbackProjects);
-      }
-    };
-
-    fetchProjects();
+    setProjects(portfolioData.projects);
+    setFilteredProjects(portfolioData.projects);
   }, []);
 
   const filterProjects = (filter) => {
