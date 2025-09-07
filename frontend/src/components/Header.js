@@ -114,6 +114,23 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    closeMenu();
+    
+    const element = document.querySelector(href);
+    if (element) {
+      const headerOffset = 70;
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const navItems = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
@@ -142,7 +159,7 @@ const Header = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <a href={item.href} onClick={closeMenu}>
+              <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                 {item.name}
               </a>
             </NavLink>
