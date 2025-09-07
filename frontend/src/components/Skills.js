@@ -185,9 +185,13 @@ const Skills = () => {
     { name: 'React', description: 'Frontend Framework', icon: '⚛️' },
     { name: 'Node.js', description: 'Backend Runtime', icon: '🟢' },
     { name: 'TypeScript', description: 'Type Safety', icon: '🔷' },
+    { name: 'Python', description: 'Programming Language', icon: '🐍' },
+    { name: 'Java', description: 'Enterprise Language', icon: '☕' },
+    { name: 'C', description: 'System Programming', icon: '⚙️' },
     { name: 'MongoDB', description: 'NoSQL Database', icon: '🍃' },
     { name: 'PostgreSQL', description: 'SQL Database', icon: '🐘' },
     { name: 'AWS', description: 'Cloud Platform', icon: '☁️' },
+    { name: 'Kubernetes', description: 'Container Orchestration', icon: '🚢' },
     { name: 'Docker', description: 'Containerization', icon: '🐳' },
     { name: 'Git', description: 'Version Control', icon: '📝' }
   ];

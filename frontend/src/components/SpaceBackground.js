@@ -22,11 +22,13 @@ const Canvas = styled.canvas`
 
 const SpaceBackground = () => {
   const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: 0, y: 0, moved: false });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let animationId;
+    let lastMouseMove = 0;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -35,28 +37,80 @@ const SpaceBackground = () => {
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    
+    // Mouse tracking
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        moved: true
+      };
+      lastMouseMove = Date.now();
+    };
+    
+    canvas.addEventListener('mousemove', handleMouseMove);
 
     // Star field
     const stars = [];
     const numStars = 200;
 
-    // Constellation points
-    const constellations = [
+    // Dynamic constellations with Aquarius emphasis
+    const constellationTemplates = [
+      // Aquarius - The Water Bearer (most frequent)
+      {
+        pattern: [
+          { x: 0, y: 0 }, { x: 0.12, y: -0.04 }, { x: 0.18, y: 0.08 },
+          { x: 0.08, y: 0.15 }, { x: 0.22, y: 0.12 }
+        ],
+        weight: 3,
+        name: 'Aquarius'
+      },
       // Big Dipper
-      [
-        { x: 0.2, y: 0.3 }, { x: 0.25, y: 0.28 }, { x: 0.3, y: 0.26 },
-        { x: 0.35, y: 0.25 }, { x: 0.32, y: 0.22 }, { x: 0.28, y: 0.2 }, { x: 0.24, y: 0.18 }
-      ],
+      {
+        pattern: [
+          { x: 0, y: 0 }, { x: 0.12, y: -0.04 }, { x: 0.24, y: -0.08 },
+          { x: 0.36, y: -0.1 }, { x: 0.28, y: -0.16 }, { x: 0.16, y: -0.2 }
+        ],
+        weight: 2,
+        name: 'Ursa Major'
+      },
       // Orion's Belt
-      [
-        { x: 0.7, y: 0.6 }, { x: 0.72, y: 0.62 }, { x: 0.74, y: 0.64 }
-      ],
+      {
+        pattern: [
+          { x: 0, y: 0 }, { x: 0.08, y: 0.04 }, { x: 0.16, y: 0.08 }
+        ],
+        weight: 2,
+        name: 'Orion'
+      },
       // Cassiopeia
-      [
-        { x: 0.8, y: 0.2 }, { x: 0.82, y: 0.18 }, { x: 0.85, y: 0.19 },
-        { x: 0.87, y: 0.17 }, { x: 0.9, y: 0.18 }
-      ]
+      {
+        pattern: [
+          { x: 0, y: 0 }, { x: 0.08, y: -0.08 }, { x: 0.2, y: -0.04 },
+          { x: 0.28, y: -0.12 }, { x: 0.4, y: -0.08 }
+        ],
+        weight: 1,
+        name: 'Cassiopeia'
+      },
+      // Simple Triangle
+      {
+        pattern: [
+          { x: 0, y: 0 }, { x: 0.15, y: 0.2 }, { x: 0.3, y: 0 }
+        ],
+        weight: 1,
+        name: 'Triangle'
+      }
     ];
+    
+    // Create weighted array for constellation selection
+    const weightedTemplates = [];
+    constellationTemplates.forEach(template => {
+      for (let i = 0; i < template.weight; i++) {
+        weightedTemplates.push(template);
+      }
+    });
+    
+    const activeConstellations = [];
 
     // Initialize stars
     for (let i = 0; i < numStars; i++) {
@@ -64,28 +118,16 @@ const SpaceBackground = () => {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         size: Math.random() * 2 + 0.5,
-        speed: Math.random() * 0.5 + 0.1,
+        speed: Math.random() * 0.1 + 0.02,
         opacity: Math.random() * 0.8 + 0.2,
-        twinkle: Math.random() * 0.02 + 0.01
+        twinkle: Math.random() * 0.005 + 0.002
       });
     }
 
     // Shooting stars
     const shootingStars = [];
     
-    const createShootingStar = () => {
-      if (Math.random() < 0.003) {
-        shootingStars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height * 0.5,
-          length: Math.random() * 80 + 20,
-          speed: Math.random() * 8 + 4,
-          angle: Math.random() * Math.PI / 4 + Math.PI / 4,
-          opacity: 1,
-          decay: 0.02
-        });
-      }
-    };
+
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -111,38 +153,149 @@ const SpaceBackground = () => {
         ctx.restore();
       });
 
-      // Draw constellations
-      constellations.forEach(constellation => {
-        ctx.strokeStyle = 'rgba(100, 149, 237, 0.3)';
-        ctx.lineWidth = 1;
+      // Manage dynamic constellations
+      const shouldCreateConstellation = () => {
+        // Higher chance near cursor if mouse moved recently
+        if (mouseRef.current.moved && Date.now() - lastMouseMove < 3000) {
+          return Math.random() < 0.008 && activeConstellations.length < 5;
+        }
+        return Math.random() < 0.001 && activeConstellations.length < 3;
+      };
+      
+      if (shouldCreateConstellation()) {
+        const template = weightedTemplates[Math.floor(Math.random() * weightedTemplates.length)];
+        let baseX, baseY;
+        
+        // Spawn near cursor if mouse moved recently, otherwise random
+        if (mouseRef.current.moved && Date.now() - lastMouseMove < 3000) {
+          const offsetRange = 200;
+          baseX = mouseRef.current.x + (Math.random() - 0.5) * offsetRange;
+          baseY = mouseRef.current.y + (Math.random() - 0.5) * offsetRange;
+          
+          // Keep within bounds
+          baseX = Math.max(100, Math.min(canvas.width - 100, baseX));
+          baseY = Math.max(100, Math.min(canvas.height - 100, baseY));
+        } else {
+          baseX = Math.random() * (canvas.width * 0.6) + canvas.width * 0.2;
+          baseY = Math.random() * (canvas.height * 0.6) + canvas.height * 0.2;
+        }
+        
+        const scale = 0.8 + Math.random() * 0.4;
+        
+        activeConstellations.push({
+          basePoints: template.pattern.map(point => ({
+            x: baseX + point.x * canvas.width * scale * 0.15,
+            y: baseY + point.y * canvas.height * scale * 0.15
+          })),
+          points: template.pattern.map(point => ({
+            x: baseX + point.x * canvas.width * scale * 0.15,
+            y: baseY + point.y * canvas.height * scale * 0.15
+          })),
+          centerX: baseX,
+          centerY: baseY,
+          opacity: 0,
+          phase: 'appearing',
+          age: 0,
+          maxAge: 400 + Math.random() * 300,
+          name: template.name,
+          isAquarius: template.name === 'Aquarius'
+        });
+      }
+      
+      // Draw and update constellations
+      activeConstellations.forEach((constellation, index) => {
+        constellation.age++;
+        
+        // Update opacity based on phase
+        if (constellation.phase === 'appearing') {
+          constellation.opacity += 0.01;
+          if (constellation.opacity >= 0.8) {
+            constellation.phase = 'stable';
+          }
+        } else if (constellation.phase === 'stable') {
+          if (constellation.age > constellation.maxAge * 0.7) {
+            constellation.phase = 'disappearing';
+          }
+        } else if (constellation.phase === 'disappearing') {
+          constellation.opacity -= 0.008;
+          if (constellation.opacity <= 0) {
+            activeConstellations.splice(index, 1);
+            return;
+          }
+        }
+        
+        // Apply parallax effect based on mouse position
+        if (mouseRef.current.moved) {
+          const mouseInfluence = 0.02; // Subtle movement
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          
+          const offsetX = (mouseRef.current.x - centerX) * mouseInfluence;
+          const offsetY = (mouseRef.current.y - centerY) * mouseInfluence;
+          
+          // Update constellation points with parallax
+          constellation.points = constellation.basePoints.map(point => ({
+            x: point.x + offsetX,
+            y: point.y + offsetY
+          }));
+        }
+        
+        // Special styling for Aquarius
+        const isAquarius = constellation.isAquarius;
+        const baseColor = isAquarius ? '64, 224, 255' : '100, 149, 237'; // Aqua blue for Aquarius
+        const lineOpacity = isAquarius ? constellation.opacity * 0.8 : constellation.opacity * 0.6;
+        const starSize = isAquarius ? 3.2 : 2.5;
+        
+        // Draw constellation lines with current positions
+        ctx.strokeStyle = `rgba(${baseColor}, ${lineOpacity})`;
+        ctx.lineWidth = isAquarius ? 2 : 1.5;
         ctx.beginPath();
         
-        constellation.forEach((point, index) => {
-          const x = point.x * canvas.width;
-          const y = point.y * canvas.height;
-          
-          if (index === 0) {
-            ctx.moveTo(x, y);
+        constellation.points.forEach((point, pointIndex) => {
+          if (pointIndex === 0) {
+            ctx.moveTo(point.x, point.y);
           } else {
-            ctx.lineTo(x, y);
+            ctx.lineTo(point.x, point.y);
           }
-          
-          // Draw constellation stars
-          ctx.save();
-          ctx.fillStyle = 'rgba(100, 149, 237, 0.8)';
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = 'rgba(100, 149, 237, 0.8)';
-          ctx.beginPath();
-          ctx.arc(x, y, 2, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
         });
         
         ctx.stroke();
+        
+        // Draw constellation stars
+        constellation.points.forEach(point => {
+          ctx.save();
+          ctx.fillStyle = `rgba(${baseColor}, ${constellation.opacity})`;
+          ctx.shadowBlur = (isAquarius ? 12 : 8) * constellation.opacity;
+          ctx.shadowColor = `rgba(${baseColor}, ${constellation.opacity * 0.8})`;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, starSize, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Extra glow for Aquarius
+          if (isAquarius) {
+            ctx.shadowBlur = 20 * constellation.opacity;
+            ctx.shadowColor = `rgba(${baseColor}, ${constellation.opacity * 0.4})`;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, starSize * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+          ctx.restore();
+        });
       });
 
-      // Create shooting stars
-      createShootingStar();
+      // Create shooting stars (less frequent)
+      if (Math.random() < 0.001) {
+        shootingStars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.5,
+          length: Math.random() * 80 + 20,
+          speed: Math.random() * 6 + 3,
+          angle: Math.random() * Math.PI / 4 + Math.PI / 4,
+          opacity: 1,
+          decay: 0.015
+        });
+      }
 
       // Draw shooting stars
       shootingStars.forEach((star, index) => {
@@ -180,6 +333,7 @@ const SpaceBackground = () => {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      canvas.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationId);
     };
   }, []);
